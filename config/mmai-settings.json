@@ -1,5 +1,5 @@
 {
-  "attacker" : "MMAI/MODELS/attacker-v10.pt",
-  "defender" : "MMAI/MODELS/defender-v5.pt",
+  "attacker" : "MMAI/models/attacker-v10.pt",
+  "defender" : "MMAI/models/defender-v5.pt",
   "fallback": "StupidAI"
 }
