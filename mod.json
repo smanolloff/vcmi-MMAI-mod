@@ -1,10 +1,10 @@
 {
-  "name": "MMAI models mod",
-  "description": "Contains pre-trained models for MMAI",
+  "name": "MMAI models",
+  "description": "Contains pre-trained models for the \"MMAI\" AI.",
   "version": "1.00",
   "modType": "AI",
   "author": "smanolloff",
-  "contact": "https://github.com/smanolloff/vcmi-gym",
+  "contact": "https://github.com/smanolloff/vcmi-MMAI-mod",
   "downloadSize": 15,
   "filesystem": {
     "MMAI/MODELS/": [
