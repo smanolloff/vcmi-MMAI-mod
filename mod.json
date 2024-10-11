@@ -5,6 +5,7 @@
   "modType": "AI",
   "author": "smanolloff",
   "contact": "https://github.com/smanolloff/vcmi-gym",
+  "downloadSize": 15,
   "filesystem": {
     "MMAI/MODELS/": [
       {"type" : "dir",  "path" : "/models"}
