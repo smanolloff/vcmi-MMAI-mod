@@ -1,7 +1,7 @@
 {
-  "name": "MMAI models",
-  "description": "Contains pre-trained models for the \"MMAI\" AI.",
-  "version": "1.00",
+  "name": "MMAI",
+  "description": "A new type of combat AI powered by machine learning.\nAvailable as a Neutral AI only.",
+  "version": "1.0",
   "modType": "AI",
   "author": "smanolloff",
   "contact": "https://github.com/smanolloff/vcmi-MMAI-mod",
@@ -13,5 +13,11 @@
     "MMAI/CONFIG/": [
       {"type" : "dir",  "path" : "/config"}
     ]
+  },
+  "changelog" : {
+    "1.0" : ["Initial release"]
+  },
+  "compatibility": {
+    "min" : "1.6.0"
   }
 }
