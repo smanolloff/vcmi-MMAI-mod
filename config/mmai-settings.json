@@ -1,5 +1,5 @@
 {
-  "attacker" : "MMAI/models/attacker-coming_soon.pt",
-  "defender" : "MMAI/models/defender-v1.pt",
+  "attacker" : "MMAI/models/attacker-coming_soon.pte",
+  "defender": "MMAI/models/cgfpenwh-1756282288.pte",
   "fallback": "StupidAI"
 }
