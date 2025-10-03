@@ -1,5 +1,13 @@
 {
-  "attacker": "nkjrmrsq-202509252116",
-  "defender": "tukbajrv-202509171940",
+  "attacker": "attacker-nkjrmrsq-202509231549-tiny",
+  // "attacker": "attacker-nkjrmrsq-202509252116-tiny",
+  // "attacker": "attacker-nkjrmrsq-202509291846-tiny",
+
+  "defender": "defender-tukbajrv-202509171940-tiny",
+  // "defender": "defender-tukbajrv-202509211112-tiny",
+  // "defender": "defender-tukbajrv-202509222128-tiny",
+  // "defender": "defender-tukbajrv-202509241418-tiny",
+
   "fallback": "StupidAI"
 }
+
