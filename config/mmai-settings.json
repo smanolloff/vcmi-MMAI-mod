@@ -1,6 +1,6 @@
 {
-  "attacker": "defender-tukbajrv-202509171940-coreml-tiny.pte",
-  "defender": "defender-tukbajrv-202509171940-coreml-tiny.pte",
+  "attacker": "defender-tukbajrv-202509171940-vulkan-tiny.pte",
+  "defender": "defender-tukbajrv-202509171940-vulkan-tiny.pte",
   "fallback": "StupidAI"
 }
 
