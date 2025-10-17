@@ -1,6 +1,13 @@
 {
-  "attacker": "defender-tukbajrv-202509171940-xnnpack-tiny.pte",
-  "defender": "defender-tukbajrv-202509171940-xnnpack-tiny.pte",
-  "fallback": "StupidAI"
+  "attacker": "attacker-nkjrmrsq-202509291846.ptl",
+  "defender": "defender-tukbajrv-202509241418.ptl",
+  "fallback": "StupidAI",
+  // Adjust temperature to set model behaviour:
+  // 0.0 = greedy (deterministic)
+  // 1.0 = baseline
+  // 2.0 = uncertain
+  // 2.5 = dumb
+  // 3+ = garbage (too random)
+  "temperature": 0.5,
+  "seed": 0
 }
-
