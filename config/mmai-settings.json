@@ -1,6 +1,6 @@
 {
-  "attacker": "attacker-nkjrmrsq-202509291846.ptl",
-  "defender": "defender-tukbajrv-202509241418.ptl",
+  "attacker": "attacker-nkjrmrsq-202509291846.pto",
+  "defender": "defender-tukbajrv-202509241418.pto",
   "fallback": "StupidAI",
   // Adjust temperature to set model behaviour:
   // 0.0 = greedy (deterministic)
