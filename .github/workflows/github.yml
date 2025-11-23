@@ -8,9 +8,9 @@ on:
     inputs:
       release_tag:
         description: "Release tag (default: auto-detect)"
-        required: false
+        required: true
       output_archive:
-        description: "Output archive name (default: vcmi-mod.zip)"
+        description: "Output name (default: vcmi-mod.zip)"
         required: false
       overwrite:
         description: "Overwrite existing archive"
@@ -50,6 +50,6 @@ jobs:
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
           done
 
-          zip -qr "$out" .
+          zip -qr "$out" . -r ".git/*" -r ".github/*"
 
           gh release upload "$tag" "$out" --repo "${{ github.repository }}" --clobber
