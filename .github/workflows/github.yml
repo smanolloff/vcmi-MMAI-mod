@@ -14,6 +14,7 @@ on:
         required: false
       overwrite:
         description: "Overwrite existing archive"
+        required: true
         default: true
         type: boolean
 
@@ -43,6 +44,7 @@ jobs:
           models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
           exists=$(echo "$assets" | jq --arg out "$out" '.assets | any(.name == $out)')
 
+          echo "${{ inputs.overwrite }}"
           $exists && ${{ inputs.overwrite }} || exit 1
 
           for m in $models; do
