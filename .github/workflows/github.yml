@@ -1,0 +1,45 @@
+name: Upload VCMI mod archive
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag (default: auto-detect)"
+        required: false
+      output_archive:
+        description: "Uoutput archive name (default: vcmi-mod.zip)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: VCMI mod archive
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euox pipefail
+
+          tag="${{ inputs.release_tag }}"
+          out="${{ inputs.output_archive}}"
+
+          [ -n "$tag" ] || tag=$(gh release view --json tagName --jq '.tagName')
+          [ -n "$out" ] || out="vcmi-mod.zip"
+
+          models=$(gh release view "$tag" --json assets --jq '.assets[] | select(.name | endswith(".onnx")) | .name')
+
+          for m in $models; do
+            gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
+          done
+
+          zip -qr "$out" .
+          gh release upload "$tag" "$out" --repo "${{ github.repository }}" --clobber
