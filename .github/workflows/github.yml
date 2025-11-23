@@ -10,8 +10,12 @@ on:
         description: "Release tag (default: auto-detect)"
         required: false
       output_archive:
-        description: "Uoutput archive name (default: vcmi-mod.zip)"
+        description: "Output archive name (default: vcmi-mod.zip)"
         required: false
+      overwrite:
+        description: "Overwrite existing archive"
+        default: true
+        type: boolean
 
 permissions:
   contents: write
@@ -23,7 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: VCMI mod archive
+      - name: Upload VCMI mod archive
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -37,10 +41,14 @@ jobs:
 
           assets=$(gh release view "$tag" --json assets)
           models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
+          exists=$(echo "$assets" | jq --arg out "$out" '.assets | any(.name == $out)')
+
+          $exists && ${{ inputs.overwrite }} || exit 1
 
           for m in $models; do
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
           done
 
           zip -qr "$out" .
+
           gh release upload "$tag" "$out" --repo "${{ github.repository }}" --clobber
