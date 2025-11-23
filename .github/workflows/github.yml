@@ -44,8 +44,7 @@ jobs:
           models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
           exists=$(echo "$assets" | jq --arg out "$out" '.assets | any(.name == $out)')
 
-          echo "${{ inputs.overwrite }}"
-          $exists && ${{ inputs.overwrite }} || exit 1
+          $exists && [ "${{ inputs.overwrite }}" = "true" ] || exit 1
 
           for m in $models; do
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
