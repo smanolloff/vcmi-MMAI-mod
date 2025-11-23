@@ -35,7 +35,8 @@ jobs:
           [ -n "$tag" ] || tag=$(gh release view --json tagName --jq '.tagName')
           [ -n "$out" ] || out="vcmi-mod.zip"
 
-          models=$(gh release view "$tag" --json assets --jq '.assets[] | select(.name | endswith(".onnx")) | .name')
+          assets=$(gh release view "$tag" --json assets)
+          models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
 
           for m in $models; do
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
