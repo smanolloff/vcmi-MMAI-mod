@@ -8,13 +8,12 @@ on:
     inputs:
       release_tag:
         description: "Release tag (default: auto-detect)"
-        required: true
-      output_archive:
-        description: "Output name (default: vcmi-mod.zip)"
+        required: false
+      output_name:
+        description: "Output name (default: vcmi-mod)"
         required: false
       overwrite:
         description: "Overwrite existing archive"
-        required: true
         default: false
         type: boolean
 
@@ -26,21 +25,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+        with:
+          path: repo
 
       - name: Upload VCMI mod archive
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euox pipefail
+          cd repo
 
           tag="${{ inputs.release_tag }}"
-          out="${{ inputs.output_archive}}"
+          name="${{ inputs.output_name }}"
 
           # If tag is empty (push trigger), default to latest
           [ -n "$tag" ] || tag=$(gh release view --json tagName --jq '.tagName')
-          [ -n "$out" ] || out="vcmi-mod.zip"
+          [ -n "$name" ] || name="vcmi-mod"
 
+          out="$name.zip"
           assets=$(gh release view "$tag" --json assets)
           models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
           exists=$(echo "$assets" | jq --arg out "$out" '.assets | any(.name == $out)')
@@ -51,6 +54,8 @@ jobs:
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
           done
 
-          zip -qr "$out" . -x ".git/*" -x ".github/*"
+          cd ..
+          mv repo "$name"
+          zip -qr "$out" "$name" -x "$name/.git/*" -x "$name/.github/*"
 
           gh release upload "$tag" "$out" --repo "${{ github.repository }}" --clobber
