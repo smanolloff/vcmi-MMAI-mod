@@ -1,19 +1,20 @@
 name: Upload VCMI mod archive
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag (default: auto-detect)"
-        required: false
-      output_name:
-        description: "Output name (default: vcmi-mod)"
-        required: false
+        description: "Release tag"
+        required: true
+      asset:
+        description: "Asset filename"
+        required: true
+        default: "vcmi-mod.zip"
       overwrite:
-        description: "Overwrite existing archive"
+        description: "Overwrite"
         default: false
         type: boolean
 
@@ -36,26 +37,39 @@ jobs:
           set -euox pipefail
           cd repo
 
+          # If tag is empty, use latest tag (push trigger, dev only)
           tag="${{ inputs.release_tag }}"
-          name="${{ inputs.output_name }}"
-
-          # If tag is empty (push trigger), default to latest
           [ -n "$tag" ] || tag=$(gh release view --json tagName --jq '.tagName')
-          [ -n "$name" ] || name="vcmi-mod"
 
-          out="$name.zip"
+          # If asset is empty, use a default "vcmi-mod.zip" (push trigger, dev only)
+          asset="${{ inputs.asset }}"
+          [ -n "$asset" ] || asset="vcmi-mod.zip"
+
+          # Validate
+          [[ "$asset" =~ ^[0-9a-z.-]+\.zip$ ]] || { echo "invalid asset filename: $asset"; exit 1; }
+
           assets=$(gh release view "$tag" --json assets)
           models=$(echo "$assets" | jq -r '.assets[] | select(.name | endswith(".onnx")) | .name')
-          exists=$(echo "$assets" | jq --arg out "$out" '.assets | any(.name == $out)')
+          exists=$(echo "$assets" | jq --arg asset "$asset" '.assets | any(.name == $asset)')
 
-          $exists && [ "${{ inputs.overwrite }}" = "true" ] || { echo "output already exists"; exit 1; }
+          if $exists; then
+            [ "${{ inputs.overwrite }}" = "true" ] || { echo "asset already exists"; exit 1; }
+          fi
 
           for m in $models; do
             gh release download "$tag" --repo "${{ github.repository }}" -D models -p "$m"
           done
 
-          cd ..
-          mv repo "$name"
-          zip -qr "$out" "$name" -x "$name/.git/*" -x "$name/.github/*"
+          # The archive should contain a root directory named after the asset
+          # vcmi-mod.zip
+          #   |- vcmi-mod/
+          #     |- mod.json
+          #     |- models/
+          #       |- model1.onnx
+          #       |- model2.onnx
 
-          gh release upload "$tag" "$out" --repo "${{ github.repository }}" --clobber
+          cd ..
+          root="${asset%.zip}"
+          mv repo "$root"
+          zip -qr "$asset" "$root" -x "$root/.git/*" -x "$root/.github/*"
+          gh release upload "$tag" "$asset" --repo "${{ github.repository }}" --clobber
